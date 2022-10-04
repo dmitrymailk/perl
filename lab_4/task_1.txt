@@ -1,0 +1,8 @@
+name:Иванов Иван Иванович, email:name@mail_1.su, age:27
+name:Андреев Андрей Андреевич, email:name@mail_2.su, age:25
+name:Петров Петр Петрович, email:name@mail_3.su, age:30
+name:Сидоров Сидор Сидорович, email:name@mail_4.su, age:28
+name:Васильев Василий Васильевич, email:name@mail_5.su, age:29
+name:Петров Петр Петрович, email:name@mail_6.su, age:30
+name:Сидоров Сидор Сидорович, email:name@mail_7.su, age:28
+name:Васильев Василий Васильевич, email:name@mail_8.su, age:29
