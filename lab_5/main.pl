@@ -14,13 +14,9 @@ sub CSVReader {
 	my @str_arr;
 	my %columns;
 	my @columns_array;
-	my $col_name;
-	my $i;
 	my $item;
 	my $source_name;
-	my $len;
 	my $result;
-	my $columns_amount;
 
 	open my $in, "<", "$filename" or die "Can't open file: $!";
 
@@ -30,7 +26,6 @@ sub CSVReader {
 	# split by delimetr
 	@str_arr = split $delimeter, $str;
 
-	# create hash with column names as keys and values as empty lists and create map with indexes
 	%columns = ();
 	@columns_array = ();
 	for $col_name (@str_arr) {
@@ -38,9 +33,6 @@ sub CSVReader {
 		push @columns_array, $col_name;
 	}
 
-	$columns_amount = scalar @columns_array;
-
-	# fill hash with data using names as keys
 	while($str = <$in>){
 		@str_arr = split $delimeter, $str;
 
@@ -52,14 +44,12 @@ sub CSVReader {
 		}
 	}
 
-	$len = scalar @{ $columns{$columns_array[0]} };
-
 	# function get table value by x and y coordinates
 	sub get_item {
 		my($x, $y) = @_;
 		my $source_name = $columns_array[$x];
 		# get length of array
-		my $len = scalar @{ $columns{$source_name} };
+		my $len = len();
 		if ($y < $len) {
 			$item = $columns{$source_name}[$y];
 			return $item;
@@ -81,20 +71,30 @@ sub CSVReader {
 	}
 
 	sub print_table {
-			for $j (0 .. $len - 1) {
-		for $i (0 .. $columns_amount - 1) {
-				my $item = get_item($i, $j);
-				print "$item\t";
+		for $j (0 .. len() - 1) {
+			for $i (0 .. columns_amount() - 1) {
+					my $item = get_item($i, $j);
+					print "$item\t";
+				}
+				print("\n");
 			}
-			print("\n");
-		}
+	}
+	sub len {
+		return scalar @{ $columns{$columns_array[0]} };
+	}
+
+	sub columns_amount {
+		return scalar @columns_array;
 	}
 
 	sub save_table {
 		my $filename = "./temp.txt";
 		open my $out, ">", "$filename" or die "Can't open file: $!";
-		for $j (0 .. $len - 1) {
-			for $i (0 .. $columns_amount - 1) {
+		my $header = join $delimeter, @columns_array;
+		print $out "$header\n";
+
+		for $j (0 .. len() - 1) {
+			for $i (0 .. columns_amount() - 1) {
 				my $item = get_item($i, $j);
 				print $out "$item$delimeter";
 			}
@@ -103,9 +103,39 @@ sub CSVReader {
 		close $out;
 	}
 
+	sub add_row {
+		my $last_id = get_item(0, len() - 1);
+		$last_id += 1;
+
+		my @messages = (
+			"Enter category please: ",
+			"Enter model please: ",
+			"Enter name_manufactorer please: ",
+			"Enter address_manufactorer please: ",
+			"Enter price please: ", 
+			"Enter amount_in_shop please: ", 
+			"Enter amount_in_stock please: ",
+		);
+
+		my $id_name = $columns_array[0];
+		push @{ $columns{$id_name} }, $last_id;
+
+		for $i (0 .. columns_amount() - 2) {
+			print @messages[$i];
+			my $item = <STDIN>;
+			# my $item = @messages[$i];
+			my $col_name = $columns_array[$i+1];
+			
+			chomp $item;
+			push @{ $columns{$col_name} }, $item;
+		}
+
+	}
+
 }
 
 my $csv_table = CSVReader($filename);
 $csv_table.set_item(0, 1, "test");
-$csv_table.print_table();
+$csv_table.add_row();
 $csv_table.save_table();
+# $csv_table.print_table();
