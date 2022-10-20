@@ -132,10 +132,32 @@ sub CSVReader {
 
 	}
 
+	sub delete_row {
+		my $id = shift;
+		my $id_name = $columns_array[0];
+		my $index = -1;
+		for $i (0 .. len() - 1) {
+			if ($columns{$id_name}[$i] == $id) {
+				$index = $i;
+				last;
+			}
+		}
+
+		if ($index == -1) {
+			die "Can't find id $id";
+		}
+		
+		for $i (0 .. columns_amount() - 1) {
+			my $col_name = $columns_array[$i];
+			splice @{ $columns{$col_name} }, $index, 1;
+		}
+	}
+
 }
 
 my $csv_table = CSVReader($filename);
-$csv_table.set_item(0, 1, "test");
-$csv_table.add_row();
-$csv_table.save_table();
-# $csv_table.print_table();
+# $csv_table.set_item(0, 1, "test");
+# $csv_table.add_row();
+# $csv_table.save_table();
+$csv_table.delete_row(12);
+$csv_table.print_table();
