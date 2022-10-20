@@ -72,6 +72,8 @@ sub CSVReader {
 	}
 
 	sub print_table {
+		# my $header = join "\t", @columns_array;
+		print "$header\n";
 		for $j (0 .. len() - 1) {
 			for $i (0 .. columns_amount() - 1) {
 					my $item = get_item($i, $j);
@@ -198,7 +200,7 @@ sub CSVReader {
 		}
 
 		for $sorted_id (@sorted_indexes) {
-			for($i=0; $i<columns_amount() ; $i++) {
+			for($i=0; $i<columns_amount(); $i++) {
 				my $col_name = $columns_array[$i];
 				my $item = get_item($i, $sorted_id);
 				push @{ $new_columns{$col_name} }, $item;
@@ -212,6 +214,8 @@ my $csv_table = CSVReader($filename);
 # $csv_table.set_item(0, 1, "test");
 # $csv_table.add_row();
 # $csv_table.save_table();
-$csv_table.delete_row(12);
-$csv_table.sort_by("amount_in_stock", "dasc");
+# $csv_table.delete_row(12);
+$csv_table.sort_by("amount_in_stock", "asc");
+# $csv_table.sort_by("price", "asc");
 $csv_table.print_table();
+$csv_table.save_table();
