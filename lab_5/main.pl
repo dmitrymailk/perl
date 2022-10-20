@@ -6,6 +6,7 @@ $Data::Dumper::Indent   = 1;
 # read file 
 $filename = "./название_задачи.txt";
 
+use Storable qw(dclone);
 
 sub CSVReader {
 	my ($filename) = @_;
@@ -78,6 +79,8 @@ sub CSVReader {
 				}
 				print("\n");
 			}
+		
+		print "\n------------\n";
 	}
 	sub len {
 		return scalar @{ $columns{$columns_array[0]} };
@@ -153,11 +156,62 @@ sub CSVReader {
 		}
 	}
 
-}
+	sub sort_by {
+		my $col_name = shift;
+		my $sort_type = shift;
+
+		my $index = -1;
+		for $i (0 .. columns_amount() - 1) {
+			if ($columns_array[$i] eq $col_name) {
+				$index = $i;
+				last;
+			}
+		}
+
+		if ($index == -1) {
+			die "Can't find column $col_name";
+		}
+
+		@sorted_array = ();
+      	for($i = 0; $i < len()-1; $i++) {
+			$item = get_item($index, $i);  
+			push @sorted_array, [$i, $item];
+		}
+
+		# sort by first column
+		@sorted_array = sort { $a->[1] <=> $b->[1] } @sorted_array;
+	 	@sorted_indexes = ();
+
+		for($i = 0; $i < len()-1; $i++) {
+			$index = $sorted_array[$i][0];
+			push @sorted_indexes, $index;
+		}
+
+		%new_columns = ();
+		for $col_name (@columns_array) {
+			$new_columns{$col_name} = ();
+		}
+
+		for $sorted_id (@sorted_indexes) {
+			for($i=0; $i<columns_amount(); $i++) {
+				my $col_name = $columns_array[$i+1];
+				# print($sorted_id, " ");
+				my $item = get_item($i, $sorted_id);
+				push @{ $new_columns{$col_name} }, $item;
+				print $item, "\t";
+			}
+			print("\n");
+		}
+		print("-------\n");
+		# $columns = dclone(\$new_columns);
+		$columns = %new_columns;
+	}
+}	
 
 my $csv_table = CSVReader($filename);
 # $csv_table.set_item(0, 1, "test");
 # $csv_table.add_row();
 # $csv_table.save_table();
 $csv_table.delete_row(12);
+$csv_table.sort_by("amount_in_stock", "asc");
 $csv_table.print_table();
