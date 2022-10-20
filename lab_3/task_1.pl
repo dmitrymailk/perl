@@ -8,7 +8,8 @@ while (my $line = <$in>) {
 	my @words = split " ", $line;
 	
 	foreach my $word (@words) {
-		if ($word =~ /в$/i || $word =~ /В$/i) {
+		# Do case-insensitive pattern matching. For example, "A" will match "a" under /i.
+		if ($word =~ /[вВ]$/) {
 			print $out $word, "\n";
 		}
 	}

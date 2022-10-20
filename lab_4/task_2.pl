@@ -6,13 +6,14 @@ my %hash = ();
 
 while (my $line = <$in>) {
 	my $string = $line;
-	# replace \n from string
-	$string =~ s///g;
 
-	my @array = split " ", $string;
+	my @array = split /[\s,.]/, $string;
 	foreach my $item (@array) {
 		my $first_letter = substr($item, 0, 1);
-		$hash{$first_letter} .= "$item ";
+		$first_letter = lc($first_letter);
+		if($first_letter ne "") {
+			$hash{$first_letter} .= "$item ";
+		}
 	}
 }
 

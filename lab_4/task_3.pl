@@ -6,10 +6,8 @@ my %hash = ();
 
 while (my $line = <$in>) {
 	my $string = $line;
-	# replace \n from string
-	$string =~ s///g;
 
-	my @array = split " ", $string;
+	my @array = split  /[\s,.]/, $string;
 	foreach my $item (@array) {
 		my $length = length($item);
 		$hash{$length} += 1;

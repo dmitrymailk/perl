@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Пример HTML</title>
+  </head>
+  <body>
+    <h1>Заголовок</h1>
+    <p>Текст</p>
+    <a href="http://www.super-secret-link.org">
+		Ссылка на супер секретный сайт
+	</a>
+	<a href="http://www.vkontacte-mail-yandex-rambler.com">
+		Ссылка на вконтакте под управлением мэйл на серверах яндекса под управлениям рамблер
+	</a>
+	<a href="http://www.fsb-roscom-administative.ru">
+		Административный сайт
+	</a>
+	<a href="">
+		фывфыв
+	</a>
+  </body>
+</html>

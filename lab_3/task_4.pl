@@ -6,7 +6,8 @@ while (my $line = <$in>) {
 	my $sum = 0;
 	
 	foreach my $number (@numbers) {
-		$sum += $number;
+		# $sum += $number;
+		$sum = $sum + $number; 
 	}
 	print $out $sum, "\n";
 }
