@@ -55,7 +55,7 @@ sub CSVReader {
 	$len = scalar @{ $columns{$columns_array[0]} };
 
 	# function get table value by x and y coordinates
-	sub get_table {
+	sub get_item {
 		my($x, $y) = @_;
 		my $source_name = $columns_array[$x];
 		# get length of array
@@ -68,17 +68,44 @@ sub CSVReader {
 		}
 	}
 
+	sub set_item {
+		my($x, $y, $value) = @_;
+		my $source_name = $columns_array[$x];
+		# get length of array
+		my $len = scalar @{ $columns{$source_name} };
+		if ($y < $len) {
+			$columns{$source_name}[$y] = $value;
+		} else {
+			die "Can't set line $y from $source_name, y > $len";
+		}
+	}
+
 	sub print_table {
 			for $j (0 .. $len - 1) {
 		for $i (0 .. $columns_amount - 1) {
-				my $item = get_table($i, $j);
+				my $item = get_item($i, $j);
 				print "$item\t";
 			}
 			print("\n");
 		}
 	}
 
+	sub save_table {
+		my $filename = "./temp.txt";
+		open my $out, ">", "$filename" or die "Can't open file: $!";
+		for $j (0 .. $len - 1) {
+			for $i (0 .. $columns_amount - 1) {
+				my $item = get_item($i, $j);
+				print $out "$item$delimeter";
+			}
+			print $out("\n");
+		}
+		close $out;
+	}
+
 }
 
-my $csv_reader = CSVReader($filename);
-$csv_reader.print_table();
+my $csv_table = CSVReader($filename);
+$csv_table.set_item(0, 1, "test");
+$csv_table.print_table();
+$csv_table.save_table();
