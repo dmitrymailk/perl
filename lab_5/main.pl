@@ -179,7 +179,12 @@ sub CSVReader {
 		}
 
 		# sort by first column
-		@sorted_array = sort { $a->[1] <=> $b->[1] } @sorted_array;
+		if ($sort_type eq "asc") {
+			@sorted_array = sort { $a->[1] <=> $b->[1] } @sorted_array;
+		} else {
+			@sorted_array = sort { $b->[1] <=> $a->[1] } @sorted_array;
+		}
+
 	 	@sorted_indexes = ();
 
 		for($i = 0; $i < len()-1; $i++) {
@@ -195,14 +200,10 @@ sub CSVReader {
 		for $sorted_id (@sorted_indexes) {
 			for($i=0; $i<columns_amount() ; $i++) {
 				my $col_name = $columns_array[$i];
-				# print($sorted_id, " ");
 				my $item = get_item($i, $sorted_id);
 				push @{ $new_columns{$col_name} }, $item;
-				# print $item, "\t";
 			}
-			# print("\n");
 		}
-		# print("-------\n");
 		%columns = %new_columns;
 	}
 }	
@@ -212,5 +213,5 @@ my $csv_table = CSVReader($filename);
 # $csv_table.add_row();
 # $csv_table.save_table();
 $csv_table.delete_row(12);
-$csv_table.sort_by("amount_in_stock", "asc");
+$csv_table.sort_by("amount_in_stock", "dasc");
 $csv_table.print_table();
