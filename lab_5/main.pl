@@ -193,18 +193,17 @@ sub CSVReader {
 		}
 
 		for $sorted_id (@sorted_indexes) {
-			for($i=0; $i<columns_amount(); $i++) {
-				my $col_name = $columns_array[$i+1];
+			for($i=0; $i<columns_amount() ; $i++) {
+				my $col_name = $columns_array[$i];
 				# print($sorted_id, " ");
 				my $item = get_item($i, $sorted_id);
 				push @{ $new_columns{$col_name} }, $item;
-				print $item, "\t";
+				# print $item, "\t";
 			}
-			print("\n");
+			# print("\n");
 		}
-		print("-------\n");
-		# $columns = dclone(\$new_columns);
-		$columns = %new_columns;
+		# print("-------\n");
+		%columns = %new_columns;
 	}
 }	
 
