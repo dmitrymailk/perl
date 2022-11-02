@@ -73,11 +73,11 @@ sub CSVReader {
 
 	sub print_table {
 		# my $header = join "\t", @columns_array;
-		print "$header\n";
+		# print "$header\n";
 		for $j (0 .. len() - 1) {
 			for $i (0 .. columns_amount() - 1) {
 					my $item = get_item($i, $j);
-					print "$item\t";
+					print "$item ";
 				}
 				print("\n");
 			}
@@ -175,7 +175,7 @@ sub CSVReader {
 		}
 
 		@sorted_array = ();
-      	for($i = 0; $i < len()-1; $i++) {
+      	for(my $i = 0; $i < len(); $i++) {
 			$item = get_item($index, $i);  
 			push @sorted_array, [$i, $item];
 		}
@@ -189,7 +189,7 @@ sub CSVReader {
 
 	 	@sorted_indexes = ();
 
-		for($i = 0; $i < len()-1; $i++) {
+		for(my $i = 0; $i < len(); $i++) {
 			$index = $sorted_array[$i][0];
 			push @sorted_indexes, $index;
 		}
@@ -208,6 +208,31 @@ sub CSVReader {
 		}
 		%columns = %new_columns;
 	}
+
+	sub search {
+		my $search_value = shift;
+		my %selected_rows = ();
+		for $i (0 .. len() - 1) {
+			for $j (0 .. columns_amount() - 1) {
+				my $item = get_item($j, $i);
+				if ($item =~ /$search_value/) {
+					$selected_rows{$i} = 1;
+				}
+			}
+		}
+
+		my @rows = keys %selected_rows;
+
+		for $i (@rows) {
+			for $j (0 .. columns_amount() - 1) {
+				my $item = get_item($j, $i);
+				print "$item ";
+			}
+			print "\n";
+		}
+
+
+	}
 }	
 
 my $csv_table = CSVReader($filename);
@@ -215,7 +240,8 @@ my $csv_table = CSVReader($filename);
 # $csv_table.add_row();
 # $csv_table.save_table();
 # $csv_table.delete_row(12);
-$csv_table.sort_by("amount_in_stock", "asc");
-# $csv_table.sort_by("price", "asc");
+# $csv_table.sort_by("amount_in_stock", "asc");
+$csv_table.sort_by("price", "asc");
 $csv_table.print_table();
-$csv_table.save_table();
+$csv_table.search("_3");
+# $csv_table.save_table();
