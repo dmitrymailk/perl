@@ -71,9 +71,9 @@ package Record {
 		my ($self, $other) = @_;
 		return $self->{_date}[0] == $other->{_date}[0] && $self->{_date}[1] == $other->{_date}[1] && $self->{_date}[2] == $other->{_date}[2];
 	}
+	
 	sub not_equal {
-		my ($self, $other) = @_;
-		return $self->{_date}[0] != $other->{_date}[0] || $self->{_date}[1] != $other->{_date}[1] || $self->{_date}[2] != $other->{_date}[2];
+		return !equal(@_);
 	}
 
 	sub greater {
@@ -195,7 +195,7 @@ package Notebook {
 
 
 
-# прочитать данный массив из файла, где записи разделены \t
+# прочитать данный массив из файла, где записи разделены пробелом
 my @records = ();
 open my $fh, "<", "names.txt" or die "Can't open file: $!";
 while (<$fh>) {
@@ -210,7 +210,7 @@ for (my $i = 0; $i < 10; $i++) {
 
 my $notebook = Notebook->new(\@records);
 # \ перед @records - это ссылка на массив @records
-$notebook->print_human("123456785");
+$notebook->print_human("3244567810");
 $notebook->search("324");
 $notebook->compare(6, 1);
 $notebook->compare(0, 1);
