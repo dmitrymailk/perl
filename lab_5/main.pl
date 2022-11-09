@@ -1,7 +1,7 @@
 use open qw(:utf8);
 binmode STDOUT,':utf8';
 use Data::Dumper;
-$Data::Dumper::Indent   = 1;
+$Data::Dumper::Indent = 1;
 
 # read file 
 $filename = "./название_задачи.txt";
@@ -215,7 +215,8 @@ sub CSVReader {
 		for $i (0 .. len() - 1) {
 			for $j (0 .. columns_amount() - 1) {
 				my $item = get_item($j, $i);
-				if ($item =~ /$search_value/) {
+				# print "$item \n";
+				if (index($item, $search_value) != -1) {
 					$selected_rows{$i} = 1;
 				}
 			}
@@ -243,5 +244,5 @@ my $csv_table = CSVReader($filename);
 # $csv_table.sort_by("amount_in_stock", "asc");
 $csv_table.sort_by("price", "asc");
 $csv_table.print_table();
-$csv_table.search("_3");
+$csv_table.search("ph");
 # $csv_table.save_table();
