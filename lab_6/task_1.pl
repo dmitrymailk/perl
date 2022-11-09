@@ -1,9 +1,12 @@
 use strict;
 use warnings;
 use v5.10; 
+# подключить Dumper
+use Data::Dumper;
 
 package Record {
 	sub new {
+		# new method - это конструктор класса
 		my $class = shift;
 		my $self = {
 			_surname => shift,
@@ -12,6 +15,7 @@ package Record {
 			_date => shift,
 		};
 		bless $self, $class;
+		# bless это встроенная функция, которая связывает объект с классом.
 		return $self;
 	}
 	sub surname {
@@ -51,12 +55,77 @@ package Record {
 		say "Surname: ", $self->surname;
 		say "Name: ", $self->name;
 		say "Phone: ", $self->phone;
-		say "Date: ", $self->date;
+		say "Date: ", $self->{_date}[0], ".", $self->{_date}[1], ".", $self->{_date}[2];	
 	}
+	# overload comparison operators for date
+	use overload
+		'==' => \&equal,
+		'!=' => \&not_equal,
+		'>' => \&greater,
+		'<' => \&less,
+		'>=' => \&greater_or_equal,
+		'<=' => \&less_or_equal,
+		'cmp' => \&compare,
+		'""' => \&to_string;
+	sub equal {
+		my ($self, $other) = @_;
+		return $self->{_date}[0] == $other->{_date}[0] && $self->{_date}[1] == $other->{_date}[1] && $self->{_date}[2] == $other->{_date}[2];
+	}
+	sub not_equal {
+		my ($self, $other) = @_;
+		return $self->{_date}[0] != $other->{_date}[0] || $self->{_date}[1] != $other->{_date}[1] || $self->{_date}[2] != $other->{_date}[2];
+	}
+
+	sub greater {
+		my ($self, $other) = @_;
+		if ($self->{_date}[2] > $other->{_date}[2]) {
+			return 1;
+		} elsif ($self->{_date}[2] < $other->{_date}[2]) {
+			return 0;
+		} else {
+			if ($self->{_date}[1] > $other->{_date}[1]) {
+				return 1;
+			} elsif ($self->{_date}[1] < $other->{_date}[1]) {
+				return 0;
+			} else {
+				if ($self->{_date}[0] > $other->{_date}[0]) {
+					return 1;
+				} else {
+					return 0;
+				}
+			}
+		}
+	}
+
+	sub less {
+		return !greater(@_) && !equal(@_);
+	}
+
+	sub greater_or_equal {
+		return greater(@_) || equal(@_);
+	}
+
+	sub less_or_equal {
+		return less(@_) || equal(@_);
+	}
+
 	sub compare {
+		my ($self, $other) = @_;
+		if (equal($self, $other)) {
+			say "Dates are equal";
+			return 0;
+		} elsif (greater($self, $other)) {
+			say "First date is greater";
+			return 1;
+		} else {
+			say "Second date is greater";
+			return -1;
+		}
+	}
+
+	sub to_string {
 		my $self = shift;
-		my $other = shift;
-		return $self->date <=> $other->date;
+		return $self->{_date}[0] . "." . $self->{_date}[1] . "." . $self->{_date}[2];
 	}
 }
 
@@ -77,7 +146,7 @@ package Notebook {
 		my $self = shift;
 		$self->{_records} = shift;
 	}
-	sub print {
+	sub print_human {
 		my $self = shift;
 		my $phone = shift;
 		my $flag = 0;
@@ -90,6 +159,8 @@ package Notebook {
 		if ($flag == 0) {
 			say "No such record";
 		}
+
+		say "-----------------------";
 	}
 	sub search {
 		my $self = shift;
@@ -105,38 +176,41 @@ package Notebook {
 			say "No such record";
 		}
 	}
+
 	sub compare {
+		say "----------------------- compare -----------------------"; 
 		my $self = shift;
-		my $other = shift;
-		my $flag = 0;
-		foreach my $record (@{$self->records}) {
-			foreach my $other_record (@{$other->records}) {
-				if ($record->compare($other_record) == 0) {
-					$record->print;
-					$flag = 1;
-				}
-			}
-		}
-		if ($flag == 0) {
-			say "No such record";
-		}
+		my $pos_1 = shift;
+		my $pos_2 = shift;
+		my $record_1 = $self->records->[$pos_1];
+		my $record_2 = $self->records->[$pos_2];
+		$record_1->print;
+		say "-----------------------";
+		$record_2->print;
+		say "-----------------------";
+		$record_1 cmp $record_2;
 	}
+
 }
 
-my @records = (
-	Record->new("Ivanov", "Ivan", "123456789", 1990),
-	Record->new("Petrov", "Petr", "123456788", 1991),
-	Record->new("Sidorov", "Sidor", "123456787", 1992),
-	Record->new("Ivanov", "Ivan", "123456786", 1993),
-	Record->new("Petrov", "Petr", "123456785", 1994),
-	Record->new("Sidorov", "Sidor", "123456784", 1995),
-	Record->new("Ivanov", "Ivan", "123456783", 1996),
-	Record->new("Petrov", "Petr", "123456782", 1997),
-	Record->new("Sidorov", "Sidor", "123456781", 1998),
-	Record->new("Ivanov", "Ivan", "123456780", 1999),
-);
+
+
+# прочитать данный массив из файла, где записи разделены \t
+my @records = ();
+open my $fh, "<", "names.txt" or die "Can't open file: $!";
+while (<$fh>) {
+	chomp;
+	my @record = split " ";
+	my @date = split /\./, $record[3];
+	push @records, Record->new($record[0], $record[1], $record[2], \@date);
+}
+for (my $i = 0; $i < 10; $i++) {
+	$records[$i]->print;
+}
 
 my $notebook = Notebook->new(\@records);
-$notebook->print("123456789");
-$notebook->search("123");
-$notebook->compare(Notebook->new(\@records));
+# \ перед @records - это ссылка на массив @records
+$notebook->print_human("123456785");
+$notebook->search("324");
+$notebook->compare(6, 1);
+$notebook->compare(0, 1);
