@@ -113,13 +113,11 @@ sub CSVReader {
 		$last_id += 1;
 
 		my @messages = (
-			"Enter category please: ",
-			"Enter model please: ",
-			"Enter name_manufactorer please: ",
-			"Enter address_manufactorer please: ",
-			"Enter price please: ", 
-			"Enter amount_in_shop please: ", 
-			"Enter amount_in_stock please: ",
+			"Enter route number: ",
+			"Enter transport type: ",
+			"Enter price: ",
+			"Enter stops_amount: ",
+			"Enter avg_speed: ", 
 		);
 
 		my $id_name = $columns_array[0];
@@ -223,7 +221,7 @@ sub CSVReader {
 		}
 
 		my @rows = keys %selected_rows;
-
+		print "Search results: \n";
 		for $i (@rows) {
 			for $j (0 .. columns_amount() - 1) {
 				my $item = get_item($j, $i);
@@ -237,12 +235,7 @@ sub CSVReader {
 }	
 
 my $csv_table = CSVReader($filename);
-$csv_table.set_item(0, 1, "test");
-$csv_table.add_row();
-$csv_table.save_table();
-$csv_table.delete_row(12);
-$csv_table.sort_by("amount_in_stock", "asc");
-$csv_table.sort_by("price", "asc");
 $csv_table.print_table();
-$csv_table.search("ph");
+$csv_table.add_row();
+$csv_table.search("trolley");
 $csv_table.save_table();

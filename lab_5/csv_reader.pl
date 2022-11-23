@@ -1,7 +1,7 @@
-use open qw(:utf8);
-binmode STDOUT,':utf8';
+use open qw(:utf8); # open file in utf8
+binmode STDOUT,':utf8'; # print in utf8
 use Data::Dumper;
-$Data::Dumper::Indent   = 1;
+$Data::Dumper::Indent   = 1; 
 
 # read file 
 $filename = "./название_задачи.txt";
@@ -12,7 +12,7 @@ $delimeter = " ";
 # print first line
 $str = <$in>;
 
-# split by delimetr
+# split by delimeter
 @str_arr = split $delimeter, $str;
 
 # create hash with column names as keys and values as empty lists and create map with indexes
