@@ -237,12 +237,12 @@ sub CSVReader {
 }	
 
 my $csv_table = CSVReader($filename);
-# $csv_table.set_item(0, 1, "test");
-# $csv_table.add_row();
-# $csv_table.save_table();
-# $csv_table.delete_row(12);
-# $csv_table.sort_by("amount_in_stock", "asc");
+$csv_table.set_item(0, 1, "test");
+$csv_table.add_row();
+$csv_table.save_table();
+$csv_table.delete_row(12);
+$csv_table.sort_by("amount_in_stock", "asc");
 $csv_table.sort_by("price", "asc");
 $csv_table.print_table();
 $csv_table.search("ph");
-# $csv_table.save_table();
+$csv_table.save_table();
