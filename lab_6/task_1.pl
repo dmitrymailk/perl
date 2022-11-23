@@ -51,11 +51,13 @@ package Record {
 		$self->{_date} = shift;
 	}
 	sub print {
+		say "vvvvvvvvvvvvvvvvvvv";
 		my $self = shift;
 		say "Surname: ", $self->surname;
 		say "Name: ", $self->name;
 		say "Phone: ", $self->phone;
-		say "Date: ", $self->{_date}[0], ".", $self->{_date}[1], ".", $self->{_date}[2];	
+		say "Date: ", $self->{_date}[0], ".", $self->{_date}[1], ".", $self->{_date}[2];
+		say "^^^^^^^^^^^^^^^^^^^";
 	}
 	# overload comparison operators for date
 	use overload
@@ -178,7 +180,7 @@ package Notebook {
 	}
 
 	sub compare {
-		say "----------------------- compare -----------------------"; 
+		say "----------------------- compare -----------------------";
 		my $self = shift;
 		my $pos_1 = shift;
 		my $pos_2 = shift;
