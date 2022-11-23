@@ -4,7 +4,7 @@ use Data::Dumper;
 $Data::Dumper::Indent = 1;
 
 # read file 
-$filename = "./название_задачи.txt";
+$filename = "./вариант17.txt";
 
 use Storable qw(dclone);
 
@@ -59,21 +59,8 @@ sub CSVReader {
 		}
 	}
 
-	sub set_item {
-		my($x, $y, $value) = @_;
-		my $source_name = $columns_array[$x];
-		# get length of array
-		my $len = scalar @{ $columns{$source_name} };
-		if ($y < $len) {
-			$columns{$source_name}[$y] = $value;
-		} else {
-			die "Can't set line $y from $source_name, y > $len";
-		}
-	}
-
 	sub print_table {
-		# my $header = join "\t", @columns_array;
-		# print "$header\n";
+		print "Table:\n";
 		for $j (0 .. len() - 1) {
 			for $i (0 .. columns_amount() - 1) {
 					my $item = get_item($i, $j);
@@ -84,6 +71,7 @@ sub CSVReader {
 		
 		print "\n------------\n";
 	}
+
 	sub len {
 		return scalar @{ $columns{$columns_array[0]} };
 	}
@@ -126,7 +114,6 @@ sub CSVReader {
 		for $i (0 .. columns_amount() - 2) {
 			print @messages[$i];
 			my $item = <STDIN>;
-			# my $item = @messages[$i];
 			my $col_name = $columns_array[$i+1];
 			
 			chomp $item;
@@ -238,4 +225,5 @@ my $csv_table = CSVReader($filename);
 $csv_table.print_table();
 $csv_table.add_row();
 $csv_table.search("trolley");
+$csv_table.sort_by("route_num", "asc");
 $csv_table.save_table();
