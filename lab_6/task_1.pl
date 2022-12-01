@@ -192,6 +192,13 @@ package TrainStation {
 		}
 		say "-----------------------";
 	}
+	sub print_by_index{
+		say "---- print by index ----";
+		my $self = shift;
+		my $index = shift;
+		$self->trains->[$index]->print;
+		say "-----------------------";
+	}
 }
 
 
@@ -211,4 +218,6 @@ my $TrainStation = TrainStation->new(\@trains);
 $TrainStation->print_all();
 $TrainStation->print_train("g");
 $TrainStation->search("Krasnodar");
+$TrainStation->print_by_index(1);
+$TrainStation->compare(0, 1);
 $TrainStation->compare(1, 5);
