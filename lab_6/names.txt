@@ -1,10 +1,11 @@
-Ivanov Ivan 123456789 1990.1.1
-Petrov Petr 123456788 1991.1.1
-Sidorov Sidor 123456787 1992.1.1
-Ivanov Ivan 123456786 1993.1.1
-Petrov Petr 123456785 1994.1.1
-Sidorov Sidor 123456784 1995.1.1
-Ivanov Ivan 123456783 1996.1.1
-Petrov Petr 123456782 1997.1.1
-Sidorov Sidor 324456781 1998.1.1
-Ivanov Ivan 123456780 1999.1.1
+Moscow Wzx24s 13:40
+Vladivostok XZWQX4 00:20
+Rostov-on-Don X125X4 12:00
+Krasnodar gHGo46 18:49
+Krasnoyarsk 8DJUY4 21:22
+Krasnodar gSAo46 15:30
+Krasnoyarsk 8zkDl4 15:20
+Krasnodar gj1o46 08:20
+Krasnoyarsk 8HYl4 11:25
+Krasnodar zxAo46 05:35
+Krasnoyarsk 8AQl4 07:30

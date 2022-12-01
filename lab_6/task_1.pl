@@ -4,59 +4,52 @@ use v5.10;
 # подключить Dumper
 use Data::Dumper;
 
-package Record {
+package Train {
+	# конструктор, Объявляем поля и привязываем к классу
 	sub new {
 		# new method - это конструктор класса
 		my $class = shift;
 		my $self = {
-			_surname => shift,
-			_name => shift,
-			_phone => shift,
-			_date => shift,
+			_place => shift,
+			_trainNum => shift,
+			_arrival_time => shift,
 		};
 		bless $self, $class;
 		# bless это встроенная функция, которая связывает объект с классом.
 		return $self;
 	}
-	sub surname {
+	#getters
+	sub place {
 		my $self = shift;
-		return $self->{_surname};
+		return $self->{_place};
 	}
-	sub name {
+	sub trainNum {
 		my $self = shift;
-		return $self->{_name};
+		return $self->{_trainNum};
 	}
-	sub phone {
+	sub arrival_time {
 		my $self = shift;
-		return $self->{_phone};
+		return $self->{_arrival_time};
 	}
-	sub date {
+	#setters
+	sub set_place {
 		my $self = shift;
-		return $self->{_date};
+		$self->{_place} = shift;
 	}
-	sub set_surname {
+	sub set_trainNum {
 		my $self = shift;
-		$self->{_surname} = shift;
+		$self->{_trainNum} = shift;
 	}
-	sub set_name {
+	sub set_arrival_time {
 		my $self = shift;
-		$self->{_name} = shift;
-	}
-	sub set_phone {
-		my $self = shift;
-		$self->{_phone} = shift;
-	}
-	sub set_date {
-		my $self = shift;
-		$self->{_date} = shift;
+		$self->{_arrival_time} = shift;
 	}
 	sub print {
 		say "vvvvvvvvvvvvvvvvvvv";
 		my $self = shift;
-		say "Surname: ", $self->surname;
-		say "Name: ", $self->name;
-		say "Phone: ", $self->phone;
-		say "Date: ", $self->{_date}[0], ".", $self->{_date}[1], ".", $self->{_date}[2];
+		say "Place: ", $self->place;
+		say "Train number: ", $self->trainNum;
+		say "arrival_time: ", $self->{_arrival_time}[0], ":", $self->{_arrival_time}[1];
 		say "^^^^^^^^^^^^^^^^^^^";
 	}
 	# overload comparison operators for date
@@ -69,36 +62,31 @@ package Record {
 		'<=' => \&less_or_equal,
 		'cmp' => \&compare,
 		'""' => \&to_string;
+	#fully equal time
 	sub equal {
 		my ($self, $other) = @_;
-		return $self->{_date}[0] == $other->{_date}[0] && $self->{_date}[1] == $other->{_date}[1] && $self->{_date}[2] == $other->{_date}[2];
+		return $self->{_arrival_time}[0] == $other->{_arrival_time}[0] && $self->{_arrival_time}[1] == $other->{_arrival_time}[1];
 	}
 	
 	sub not_equal {
 		return !equal(@_);
 	}
-
+	# first we compare time, then hours
 	sub greater {
 		my ($self, $other) = @_;
-		if ($self->{_date}[2] > $other->{_date}[2]) {
-			return 1;
-		} elsif ($self->{_date}[2] < $other->{_date}[2]) {
-			return 0;
-		} else {
-			if ($self->{_date}[1] > $other->{_date}[1]) {
+			if ($self->{_arrival_time}[0] > $other->{_arrival_time}[0]) {
 				return 1;
-			} elsif ($self->{_date}[1] < $other->{_date}[1]) {
+			} elsif ($self->{_arrival_time}[0] < $other->{_arrival_time}[0]) {
 				return 0;
 			} else {
-				if ($self->{_date}[0] > $other->{_date}[0]) {
+				if ($self->{_arrival_time}[1] > $other->{_arrival_time}[1]) {
 					return 1;
 				} else {
 					return 0;
 				}
-			}
-		}
+			}	
 	}
-
+	# less is not greater && not equal
 	sub less {
 		return !greater(@_) && !equal(@_);
 	}
@@ -106,55 +94,57 @@ package Record {
 	sub greater_or_equal {
 		return greater(@_) || equal(@_);
 	}
-
+    
 	sub less_or_equal {
 		return less(@_) || equal(@_);
 	}
-
+	# compare method
 	sub compare {
 		my ($self, $other) = @_;
 		if (equal($self, $other)) {
-			say "Dates are equal";
+			say "Times are equal";
 			return 0;
 		} elsif (greater($self, $other)) {
-			say "First date is greater";
+			say "First time is greater";
 			return 1;
 		} else {
-			say "Second date is greater";
+			say "Second time is greater";
 			return -1;
 		}
 	}
-
+	# overload stringification operator
 	sub to_string {
 		my $self = shift;
-		return $self->{_date}[0] . "." . $self->{_date}[1] . "." . $self->{_date}[2];
+		return $self->{_arrival_time}[0] . ":" . $self->{_arrival_time}[1];
 	}
 }
-
-package Notebook {
+# Класс описывающий массив поездов
+package TrainStation {
 	sub new {
 		my $class = shift;
 		my $self = {
-			_records => shift,
+			_trains => shift,
 		};
 		bless $self, $class;
 		return $self;
 	}
-	sub records {
+	sub trains {
 		my $self = shift;
-		return $self->{_records};
+		return $self->{_trains};
 	}
-	sub set_records {
+	sub set_trains {
 		my $self = shift;
-		$self->{_records} = shift;
+		$self->{_trains} = shift;
 	}
-	sub print_human {
+	# Получаем переданное значение, затем проходимся по поездам и ищем похожие.
+	sub print_train {
+		say "--------Search by Number result--------";
 		my $self = shift;
-		my $phone = shift;
+		my $trainNum = shift;
 		my $flag = 0;
-		foreach my $record (@{$self->records}) {
-			if ($record->phone eq $phone) {
-				$record->print;
+		foreach my $train (@{$self->trains}) {
+			if ($train->trainNum =~ $trainNum) {
+				$train->print;
 				$flag = 1;
 			}
 		}
@@ -164,13 +154,15 @@ package Notebook {
 
 		say "-----------------------";
 	}
+	# Получаем переданное значение, затем проходимся по поездам и ищем точно совпадающие.
 	sub search {
+		say "--------Search by Destination result--------";
 		my $self = shift;
-		my $digits = shift;
+		my $destination = shift;
 		my $flag = 0;
-		foreach my $record (@{$self->records}) {
-			if (substr($record->phone, 0, 3) eq $digits) {
-				$record->print;
+		foreach my $train (@{$self->trains}) {
+			if ($train->place eq $destination) {
+				$train->print;
 				$flag = 1;
 			}
 		}
@@ -178,41 +170,45 @@ package Notebook {
 			say "No such record";
 		}
 	}
-
+	# Сравниваем поезда по времени прибытия
 	sub compare {
 		say "----------------------- compare -----------------------";
 		my $self = shift;
 		my $pos_1 = shift;
 		my $pos_2 = shift;
-		my $record_1 = $self->records->[$pos_1];
-		my $record_2 = $self->records->[$pos_2];
+		my $record_1 = $self->trains->[$pos_1];
+		my $record_2 = $self->trains->[$pos_2];
 		$record_1->print;
 		say "-----------------------";
 		$record_2->print;
 		say "-----------------------";
 		$record_1 cmp $record_2;
 	}
-
+	sub print_all {
+		say "-----------------------";
+		my $self = shift;
+		foreach my $train (@{$self->trains}) {
+			$train->print;
+		}
+		say "-----------------------";
+	}
 }
 
 
 
 # прочитать данный массив из файла, где записи разделены пробелом
-my @records = ();
+my @trains = ();
 open my $fh, "<", "names.txt" or die "Can't open file: $!";
 while (<$fh>) {
 	chomp;
 	my @record = split " ";
-	my @date = split /\./, $record[3];
-	push @records, Record->new($record[0], $record[1], $record[2], \@date);
-}
-for (my $i = 0; $i < 10; $i++) {
-	$records[$i]->print;
+	my @arrival_time = split /:/, $record[2];
+	push @trains, Train->new($record[0], $record[1], \@arrival_time);
 }
 
-my $notebook = Notebook->new(\@records);
+my $TrainStation = TrainStation->new(\@trains);
 # \ перед @records - это ссылка на массив @records
-$notebook->print_human("3244567810");
-$notebook->search("324");
-$notebook->compare(6, 1);
-$notebook->compare(0, 1);
+$TrainStation->print_all();
+$TrainStation->print_train("g");
+$TrainStation->search("Krasnodar");
+$TrainStation->compare(1, 5);
