@@ -29,7 +29,7 @@ package Train {
 	}
 	sub arrival_time {
 		my $self = shift;
-		return $self->{_arrival_time};
+		return $self->{_arrival_time}[0].":".$self->{_arrival_time}[1];
 	}
 	#setters
 	sub set_place {
@@ -49,7 +49,7 @@ package Train {
 		my $self = shift;
 		say "Place: ", $self->place;
 		say "Train number: ", $self->trainNum;
-		say "arrival_time: ", $self->{_arrival_time}[0], ":", $self->{_arrival_time}[1];
+		say "arrival_time: ", $self->arrival_time;
 		say "^^^^^^^^^^^^^^^^^^^";
 	}
 	# overload comparison operators for date
